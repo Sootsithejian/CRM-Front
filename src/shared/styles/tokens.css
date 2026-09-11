@@ -1,0 +1,56 @@
+/* ============================================================
+
+   TOKENS DE DISEÑO — CrediMil
+
+   Fuente de verdad. Todo lo declarado aquí genera utilidades de
+
+   Tailwind: --color-navy-800 → bg-navy-800, text-navy-800, etc.
+ 
+   Los grises (slate), rojos, ámbar, verdes y celestes que usa la
+
+   UI son los de la paleta por defecto de Tailwind y coinciden con
+
+   el diseño, por eso no se redeclaran.
+
+   ============================================================ */
+ 
+@theme {
+
+  /* ---------- Marca ---------- */
+
+  --color-navy-900: #071829;
+
+  --color-navy-800: #0b2239;
+
+  --color-navy-700: #12314f;
+
+  --color-navy-600: #1b4570;
+ 
+  --color-primary-100: #e0f2fe;
+
+  --color-primary-500: #0ea5e9;
+
+  --color-primary-600: #0284c7;
+
+  --color-primary-700: #0369a1;
+ 
+  --color-accent-100: #fdeaed;
+
+  --color-accent-500: #e8112d;
+
+  --color-accent-600: #c40d26;
+
+  --color-accent-700: #9c0a1f;
+ 
+  /* ---------- Tipografía ---------- */
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+
+    Roboto, sans-serif;
+ 
+  /* H1 fluido: 28px → 36px sin media queries */
+
+  --text-3xl: clamp(1.75rem, 1.4rem + 1.6vw, 2.25rem);
+
+}
+ 
