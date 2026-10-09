@@ -25,6 +25,11 @@ import { ROLES } from "../../shared/constants/roles";
 import { ListaNegraPage } from "../../features/lista-negra/pages/ListaNegraPage";
 
 import { AltaClientePage } from "../../features/clientes/pages/AltaClientePage";
+
+import { NuevaSolicitudPage } from "../../features/creditos/pages/NuevaSolicitudPage";
+import { SolicitudesPage } from "../../features/creditos/pages/SolicitudesPage";
+import { ConsultaCreditosPage } from "../../features/creditos/pages/ConsultaCreditosPage";
+import { DetalleCreditoPage } from "../../features/creditos/pages/DetalleCreditoPage";
  
 /* Espejo de los permisos del backend. Si cambian allá, cambian aquí. */
 
@@ -84,12 +89,18 @@ export function AppRoutes() {
 <Route path="/clientes" element={<ConsultaClientesPage />} />
 <Route path="/clientes/lista-negra" element={<ListaNegraPage/>}/>
 <Route path="/clientes/:id" element={<DetalleClientePage />} />
+<Route path="/creditos" element={<ConsultaCreditosPage/>}/>
+<Route path="/creditos/solicitudes" element={<SolicitudesPage/>}/>
+<Route path="/creditos/:id" element={<DetalleCreditoPage/>}/>
+
+
 </Route>
  
           {/* ---- Clientes: captura ---- */}
 <Route element={<ProtectedRoute roles={ROLES_CAPTURA_CLIENTES} />}>
 <Route path="/clientes/alta" element={<AltaClientePage/>}/>
 <Route path="/clientes/:id/editar" element={<EditarClientePage />} />
+<Route path="/creditos/solicitudes/nueva" element={<NuevaSolicitudPage/>}/>
 </Route>
  
           {/* ---- Usuarios ---- */}

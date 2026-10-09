@@ -95,7 +95,7 @@ export function EditarClientePage() {
           observaciones: valores.observaciones || undefined,
 
         },
-
+        motivo_cambio_zona: valores.motivo_cambio_zona || undefined,
       } as any);
  
       navigate(`/clientes/${idNumerico}`, {

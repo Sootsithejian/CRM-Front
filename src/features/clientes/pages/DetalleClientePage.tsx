@@ -14,6 +14,8 @@ import { useState } from "react";
 
 import { ModalVetar } from "../../lista-negra/components/ModalVetar";
 
+import { HistorialZona } from "../components/HistorialZona";
+
 export function DetalleClientePage() {
 
     const { id } = useParams<{ id: string }>();
@@ -171,10 +173,15 @@ export function DetalleClientePage() {
                 </div>
             </section>
 
+            <HistorialZona idCliente={cliente.id}/>
+
             <div className="mt-6 flex flex-wrap gap-3">
-                <Button disabled title="El módulo de créditos aún no está disponible">
-                    Nuevo Crédito
+                {!persona.en_lista_negra && (
+                  <Button
+                    onClick={() => navigate(`/creditos/solicitudes/nueva?cliente=${cliente.id}`)}>    
+                      Nuevo Crédito
                 </Button>
+                )}
                 <Button
                     variant="secondary"
                     disabled={!puedeEditar}

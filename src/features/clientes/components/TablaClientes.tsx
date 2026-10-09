@@ -157,9 +157,12 @@ export function TablaClientes({ clientes, cargando, puedeEditar }: TablaProps) {
 
                       icono={CirclePlus}
 
-                      etiqueta="Nuevo crédito (próximamente)"
+                      etiqueta={`Nuevo crédito para &{c.nombre}`}
 
-                      deshabilitado
+                      onClick={() =>
+                        navigate(`/creditos/solicitudes/nueva?cliente=${c.id}`)
+                      }
+                      deshabilitado={!puedeEditar || c.en_lista_negra}
 
                     />
 </div>

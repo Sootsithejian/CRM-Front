@@ -59,7 +59,7 @@ export interface PersonaDetalle {
     tel_principal: string | null;
     tel_2: string | null;
     tel_3: string | null;
-    en_lista_negra: string | null;
+    en_lista_negra: boolean;
 }
 
 export interface AvalDetalle {
@@ -138,3 +138,16 @@ export interface ClienteFormInput {
         observaciones?: string;
     };
 }
+
+export interface CambioZona{
+    id: number;
+    id_cliente: number;
+    zona_anterior: string | null;
+    sector_anterior: string | null;
+    zona_nueva: string | null;
+    sector_nuevo: string | null;
+    motivo: string | null;
+    fecha: string;
+    usuario: string;
+}
+

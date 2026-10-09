@@ -218,8 +218,31 @@ export const NAV_ITEMS: NavItem[] = [
 
     roles: TODOS_LOS_ROLES,
 
-    disponible: false,
+    disponible: true,
 
+    hijos: [
+      {
+        id: "creditos-nueva",
+        label: "Nueva Solicitud",
+        ruta: "/creditos/solicitudes/nueva",
+        roles: ROLES_CAPTURA,
+        disponible: true
+      },
+      {
+        id: "creditos-solicitudes",
+        label: "Solicitudes",
+        ruta: "/creditos/solicitudes",
+        roles:TODOS_LOS_ROLES,
+        disponible: true,
+      },
+      {
+        id: "creditos-consulta",
+        label: "Consulta",
+        ruta: "/creditos",
+        roles:TODOS_LOS_ROLES,
+        disponible: true,
+      },
+    ],
   },
 
   {

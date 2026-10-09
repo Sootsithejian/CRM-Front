@@ -12,6 +12,8 @@ import type {
 
   RespuestaListado,
 
+  CambioZona,
+
 } from "../types";
  
 export async function listarClientes(
@@ -86,5 +88,12 @@ export async function actualizarCliente(
 
   return data;
 
+}
+
+export async function obtenerHistorialZona(id: number): Promise<CambioZona[]> {
+  const {data} = await api.get<{ historial: CambioZona[]}> (
+    `/clientes/${id}/historial-zona`
+  );
+  return data.historial;
 }
  

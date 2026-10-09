@@ -10,3 +10,4 @@ export {Paginacion} from "./Paginacion/Paginacion";
 export {Breadcrumb} from "./Breadcrumb/Breadcrumb";
 export {Modal} from "./Modal/Modal";
 export {Textarea} from "./Textarea/Textarea"
+export { FileInput} from "./FileInput/FileInput"
