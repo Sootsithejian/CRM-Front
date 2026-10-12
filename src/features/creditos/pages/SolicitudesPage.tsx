@@ -251,7 +251,13 @@ export function SolicitudesPage() {
                     {new Date(s.fecha_captura).toLocaleDateString("es-MX", { dateStyle: "medium" })}
                   </Td>
                   <Td>
-                    <Badge variant={badge.variant}>{badge.label}</Badge>
+                    {/* Insignia solo si la solicitud espera a alguien; las
+                        cerradas van como texto. */}
+                    {s.dictamen === "PENDIENTE" || s.dictamen === "PREAPROBADA" ? (
+                      <Badge variant={badge.variant}>{badge.label}</Badge>
+                    ) : (
+                      <span className="text-slate-500">{badge.label}</span>
+                    )}
                   </Td>
                   <Td alinear="der">
                     <div className="flex items-center justify-end gap-1.5">

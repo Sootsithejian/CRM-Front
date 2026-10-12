@@ -87,7 +87,7 @@ export function LoginPage() {
         </div>
       </aside>
 
-      <main className="flex flex-col justify-center bg-white px-5 py-10 lg:px-16 lg:py-12">
+      <main className="flex flex-col bg-white px-5 py-8 lg:justify-center lg:px-16 lg:py-12">
         <div className="mx-auto w-full max-w-[360px]">
           <p className="mb-2 text-sm font-medium text-slate-500">
             Acceso al portal

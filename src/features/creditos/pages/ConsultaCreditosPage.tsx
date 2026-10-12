@@ -217,19 +217,29 @@ export function ConsultaCreditosPage() {
                     {c.zona ?? "—"}
                     {c.sector ? `-${c.sector}` : ""}
                   </Td>
+                  {/* Insignia solo para lo que pide atención: un "Bueno" verde en
+                      cada fila es ruido. */}
                   <Td className="whitespace-nowrap">
-                    <Badge variant={cal.variant}>{cal.label}</Badge>
+                    {cal.variant === "success" ? (
+                      <span className="text-slate-600">{cal.label}</span>
+                    ) : (
+                      <Badge variant={cal.variant}>{cal.label}</Badge>
+                    )}
                     {c.fallos > 0 && (
                       <span className="ml-2 text-xs text-slate-500 tabular-nums">
                         {c.fallos} {c.fallos === 1 ? "fallo" : "fallos"}
                       </span>
                     )}
                   </Td>
-                  <Td>
+                  <Td className="whitespace-nowrap">
                     {c.liquidado ? (
-                      <Badge variant="neutral">Liquidado</Badge>
+                      <span className="text-slate-500">Liquidado</span>
+                    ) : c.estatus === "ENTREGADO" ? (
+                      <span className="text-slate-600">Entregado</span>
+                    ) : c.estatus === "NO ENTREGADO" ? (
+                      <Badge variant="info">Por entregar</Badge>
                     ) : (
-                      <Badge variant="info">{c.estatus}</Badge>
+                      <Badge variant="neutral">{c.estatus}</Badge>
                     )}
                   </Td>
                 </FilaEnlace>

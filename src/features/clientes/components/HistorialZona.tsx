@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 
-import { Spinner } from "../../../shared/ui";
+import { SeccionLateral, Spinner } from "../../../shared/ui";
 import { esZonaEspecial } from "../../../shared/constants/zonas";
 import { formatearFechaHora } from "../../../shared/lib/formato";
 import { obtenerHistorialZona } from "../api/clientes.api";
 import type { CambioZona } from "../types";
 
-/*  Cambios de zona y sector del cliente. Vive en la columna lateral del
-    detalle, así que cada cambio se apila en vertical.  */
+/*  Cambios de zona y sector del cliente. Es una sección del PanelLateral
+    del detalle, así que cada cambio se apila en vertical. Sin cambios no
+    renderiza nada, y si es lo único del panel el panel desaparece.  */
 export function HistorialZona({ idCliente }: { idCliente: number }) {
     const [historial, setHistorial] = useState<CambioZona[]>([]);
     const [cargando, setCargando] = useState(true);
@@ -34,9 +35,9 @@ export function HistorialZona({ idCliente }: { idCliente: number }) {
 
     if (cargando) {
         return (
-            <section className="rounded-xl border border-slate-200 bg-white p-4">
+            <SeccionLateral titulo="Historial de zona">
                 <Spinner centered />
-            </section>
+            </SeccionLateral>
         );
     }
 
@@ -44,9 +45,7 @@ export function HistorialZona({ idCliente }: { idCliente: number }) {
     if (historial.length === 0) return null;
 
     return (
-        <section className="rounded-xl border border-slate-200 bg-white p-4">
-            <h2 className="mb-2 text-sm font-semibold text-slate-900">Historial de zona</h2>
-
+        <SeccionLateral titulo="Historial de zona">
             <ol className="divide-y divide-slate-100">
                 {historial.map((c) => (
                     <li key={c.id} className="py-2.5 first:pt-1 last:pb-0">
@@ -62,7 +61,7 @@ export function HistorialZona({ idCliente }: { idCliente: number }) {
                     </li>
                 ))}
             </ol>
-        </section>
+        </SeccionLateral>
     );
 }
 

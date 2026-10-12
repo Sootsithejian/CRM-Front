@@ -1,5 +1,4 @@
 import { useState } from "react";
-import type { ReactNode } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { FileText, Wallet } from "lucide-react";
@@ -11,6 +10,8 @@ import {
   Button,
   CabeceraDetalle,
   DatoContexto,
+  PanelLateral,
+  SeccionLateral,
   DataItem,
   DataList,
   Spinner,
@@ -121,9 +122,11 @@ export function DetalleCreditoPage() {
         titulo={`Crédito ${credito.numero_credito}`}
         insignias={
           <>
-            <Badge variant={CAL[credito.calificacion] ?? "neutral"}>
-              {credito.calificacion}
-            </Badge>
+            {credito.calificacion !== "BUENO" && (
+              <Badge variant={CAL[credito.calificacion] ?? "neutral"}>
+                {credito.calificacion}
+              </Badge>
+            )}
             {credito.liquidado && <Badge variant="neutral">Liquidado</Badge>}
             {credito.demanda && <Badge variant="danger">En demanda</Badge>}
           </>
@@ -193,9 +196,10 @@ export function DetalleCreditoPage() {
           />
         </div>
 
-        {/* Lateral: condiciones y lo administrativo, en tarjetas compactas. */}
-        <aside className="flex min-w-0 flex-col gap-4" aria-label="Datos del crédito">
-          <Lateral titulo="Condiciones">
+        {/* Lateral: condiciones y lo administrativo, en una sola tarjeta. */}
+        <div className="min-w-0">
+        <PanelLateral etiqueta="Datos del crédito">
+          <SeccionLateral titulo="Condiciones">
             <div className="flex flex-col gap-5">
               <DesgloseEntrega
                 monto={credito.monto}
@@ -239,9 +243,9 @@ export function DetalleCreditoPage() {
                 </DataItem>
               </DataList>
             </div>
-          </Lateral>
+          </SeccionLateral>
 
-          <Lateral
+          <SeccionLateral
             titulo="Cliente"
             accion={
               <Link
@@ -269,10 +273,10 @@ export function DetalleCreditoPage() {
                   : null}
               </DataItem>
             </DataList>
-          </Lateral>
+          </SeccionLateral>
 
           {avales.length > 0 && (
-            <Lateral titulo={avales.length === 1 ? "Aval" : `Avales (${avales.length})`}>
+            <SeccionLateral titulo={avales.length === 1 ? "Aval" : `Avales (${avales.length})`}>
               <div className="flex flex-col gap-4">
                 {avales.map((a: any) => (
                   <DataList
@@ -289,11 +293,11 @@ export function DetalleCreditoPage() {
                   </DataList>
                 ))}
               </div>
-            </Lateral>
+            </SeccionLateral>
           )}
 
           {(garantias.length > 0 || documentos.length > 0) && (
-            <Lateral titulo="Garantías y documentos">
+            <SeccionLateral titulo="Garantías y documentos">
               <div className="flex flex-col gap-4">
                 {garantias.length > 0 && (
                   <div>
@@ -337,45 +341,25 @@ export function DetalleCreditoPage() {
                   </div>
                 )}
               </div>
-            </Lateral>
+            </SeccionLateral>
           )}
 
           {solicitud && (
-            <Lateral titulo="Origen">
+            <SeccionLateral titulo="Origen">
               <DataList compacta>
                 <DataItem label="Folio">{solicitud.folio}</DataItem>
                 <DataItem label="Capturó">{solicitud.usuario_captura}</DataItem>
                 <DataItem label="Preaprobó">{solicitud.usuario_preaprueba}</DataItem>
                 <DataItem label="Aprobó">{solicitud.usuario_aprueba}</DataItem>
               </DataList>
-            </Lateral>
+            </SeccionLateral>
           )}
 
           {movimientos.length > 0 && <Movimientos movimientos={movimientos} />}
-        </aside>
+        </PanelLateral>
+        </div>
       </div>
     </>
-  );
-}
-
-/** Tarjeta compacta de la columna lateral. */
-function Lateral({
-  titulo,
-  accion,
-  children,
-}: {
-  titulo: string;
-  accion?: ReactNode;
-  children: ReactNode;
-}) {
-  return (
-    <section className="rounded-xl border border-slate-200 bg-white p-4">
-      <div className="mb-2 flex items-center justify-between gap-3">
-        <h2 className="text-sm font-semibold text-slate-900">{titulo}</h2>
-        {accion}
-      </div>
-      {children}
-    </section>
   );
 }
 
@@ -388,7 +372,7 @@ function Movimientos({ movimientos }: { movimientos: any[] }) {
   const ocultos = movimientos.length - MOVIMIENTOS_VISIBLES;
 
   return (
-    <Lateral titulo="Movimientos">
+    <SeccionLateral titulo="Movimientos">
       <ul className="divide-y divide-slate-100">
         {visibles.map((m) => (
           <li key={m.id} className="py-2 text-sm">
@@ -413,6 +397,6 @@ function Movimientos({ movimientos }: { movimientos: any[] }) {
           {todos ? "Ver menos" : `Ver ${ocultos} más`}
         </button>
       )}
-    </Lateral>
+    </SeccionLateral>
   );
 }

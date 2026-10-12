@@ -28,3 +28,4 @@ export type { Pestana } from "./Pestanas/Pestanas";
 export { CampoBusqueda } from "./CampoBusqueda/CampoBusqueda";
 export { EncabezadoListado } from "./EncabezadoListado/EncabezadoListado";
 export { CabeceraDetalle, DatoContexto } from "./CabeceraDetalle/CabeceraDetalle";
+export { PanelLateral, SeccionLateral } from "./PanelLateral/PanelLateral";

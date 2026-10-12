@@ -170,7 +170,7 @@ function TablaSemanas({ semanas, semanaActual }: { semanas: SemanaEstado[]; sema
                 ) : s.genero_fallo ? (
                   <Badge variant="danger">Fallo</Badge>
                 ) : (
-                  <Badge variant="success">Sin fallo</Badge>
+                  <span className="text-slate-500">Sin fallo</span>
                 )}
               </Td>
             </Fila>

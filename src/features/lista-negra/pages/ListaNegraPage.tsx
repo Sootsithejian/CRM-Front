@@ -7,7 +7,6 @@ import {
     Alert,
     EncabezadoListado,
     CampoBusqueda,
-    Badge,
     Breadcrumb,
     Button,
     Fila,
@@ -213,10 +212,12 @@ export function ListaNegraPage() {
                                     })}
                                 </Td>
                                 <Td>
+                                    {/* Toda la lista son vetos: el rojo en cada fila no
+                                        distingue nada. */}
                                     {r.activa ? (
-                                        <Badge variant="danger">Activo</Badge>
+                                        <span className="text-slate-700">Activo</span>
                                     ) : (
-                                        <Badge variant="neutral">Retirado</Badge>
+                                        <span className="text-slate-500">Retirado</span>
                                     )}
                                 </Td>
                                 <Td alinear="der">

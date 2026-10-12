@@ -11,6 +11,8 @@ import {
     DataItem,
     DataList,
     DatoContexto,
+    PanelLateral,
+    SeccionLateral,
     Spinner,
 } from "../../../shared/ui";
 import { useAuth } from "../../auth/hooks/useAuth";
@@ -213,9 +215,9 @@ export function DetalleClientePage() {
                 </section>
 
                 <div className="flex min-w-0 flex-col gap-6">
+                    <PanelLateral etiqueta="Relaciones e historial">
                     {avala_a.length > 0 && (
-                        <section className="rounded-xl border border-slate-200 bg-white p-4">
-                            <h2 className="mb-2 text-sm font-semibold text-slate-900">Es aval de</h2>
+                        <SeccionLateral titulo="Es aval de">
                             <ul className="divide-y divide-slate-100 text-sm">
                                 {avala_a.map((a) => (
                                     <li
@@ -234,10 +236,13 @@ export function DetalleClientePage() {
                                     </li>
                                 ))}
                             </ul>
-                        </section>
+                        </SeccionLateral>
                     )}
 
                     <HistorialZona idCliente={cliente.id} />
+                    </PanelLateral>
+
+                    {/* Acción destructiva: aparte a propósito, no dentro del panel. */}
 
                     {puedeVetar && !persona.en_lista_negra && (
                         <div className="rounded-xl border border-red-200 p-4">

@@ -79,7 +79,9 @@ export function TablaClientes({ clientes, cargando, puedeEditar }: TablaProps) {
               {c.en_lista_negra ? (
                 <Badge variant="danger">Lista negra</Badge>
               ) : obs ? (
-                <Badge variant="success">{obs}</Badge>
+                <span className="text-slate-600" title={c.observaciones ?? undefined}>
+                  {obs}
+                </span>
               ) : (
                 <span className="text-slate-500">—</span>
               )}

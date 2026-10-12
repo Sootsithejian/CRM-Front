@@ -127,9 +127,9 @@ function PanelCredito({ numero }: { numero: number }) {
                 <h2 className="text-lg font-bold text-slate-900">
                   Crédito {credito.numero_credito}
                 </h2>
-                <Badge variant={credito.estatus === "ENTREGADO" ? "info" : "neutral"}>
-                  {credito.estatus}
-                </Badge>
+                {credito.estatus !== "ENTREGADO" && (
+                  <Badge variant="neutral">{credito.estatus}</Badge>
+                )}
               </div>
               <p className="mt-1 text-sm text-slate-500">
                 {credito.nombre_cliente} · Nº de cliente {credito.numero_cliente} · Zona{" "}
