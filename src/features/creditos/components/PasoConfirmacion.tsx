@@ -274,8 +274,8 @@ function Dato({ label, valor }: { label: string; valor: React.ReactNode }) {
 
   return (
 <div>
-<p className="mb-1 text-xs tracking-wide text-slate-400 uppercase">{label}</p>
-<p className={vacio ? "text-slate-400" : "font-semibold text-slate-900"}>
+<p className="mb-1 text-xs tracking-wide text-slate-500 uppercase">{label}</p>
+<p className={vacio ? "text-slate-500" : "font-semibold text-slate-900"}>
 
         {vacio ? "—" : valor}
 </p>

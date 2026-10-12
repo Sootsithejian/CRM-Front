@@ -273,7 +273,24 @@ export const NAV_ITEMS: NavItem[] = [
 
     roles: TODOS_LOS_ROLES,
 
-    disponible: false,
+    disponible: true,
+
+    hijos: [
+      {
+        id: "pagos-registrar",
+        label: "Registrar",
+        ruta: "/pagos/registrar",
+        roles: ROLES_CAPTURA,
+        disponible: true,
+      },
+      {
+        id: "pagos-consulta",
+        label: "Consulta",
+        ruta: "/pagos",
+        roles: TODOS_LOS_ROLES,
+        disponible: true,
+      },
+    ],
 
   },
 

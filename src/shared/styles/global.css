@@ -26,13 +26,21 @@ body {
 
   font-family: var(--font-sans);
 
-  font-size: var(--text-base);
+  font-size: 1rem;
 
-  line-height: var(--leading-normal);
+  line-height: 1.5;
 
-  color: var(--color-text);
+  /* Valores literales: Tailwind solo emite las variables de tema que usa
+     alguna clase, y --color-text / --color-bg nunca existieron. */
+  color: var(--color-slate-900, #0f172a);
 
-  background-color: var(--color-bg);
+  background-color: #fff;
+
+  /* Voz tipográfica de la app: "a" de un piso (cv11) y dígitos abiertos
+     (ss01). Aplica a todo, incluidas tablas y montos. */
+  font-feature-settings: "cv11", "ss01";
+
+  font-optical-sizing: auto;
 
   -webkit-font-smoothing: antialiased;
 
@@ -97,9 +105,14 @@ h3,
 
 h4 {
 
-  line-height: var(--leading-tight);
+  line-height: 1.25;
 
-  font-weight: var(--weight-bold);
+  /* --weight-bold no existía: los títulos sin clase salían en 400. */
+  font-weight: 600;
+
+  /* Tracking negativo en todos los títulos; las clases de cada página
+     (font-bold, text-*) siguen ganando porque esto vive en layer(base). */
+  letter-spacing: -0.02em;
 
   text-wrap: balance;
 

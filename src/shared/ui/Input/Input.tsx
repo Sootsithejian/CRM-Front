@@ -4,7 +4,7 @@ import type { InputHTMLAttributes } from "react";
  
 const INPUT_BASE =
 
-  "w-full min-h-11 px-4 rounded-lg border bg-white text-base text-slate-900 " +
+  "w-full min-h-11 px-4 rounded-lg border bg-white text-base text-slate-900 lg:text-sm " +
 
   "placeholder:text-slate-400 transition duration-150 focus:outline-none " +
 
@@ -34,6 +34,12 @@ interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "id"> {
 
   revealable?: boolean;
 
+  /** La etiqueta solo para lectores de pantalla (barras de filtros). */
+  etiquetaOculta?: boolean;
+
+  /** 36px en escritorio en vez de 40px. Para barras de filtros. */
+  compacto?: boolean;
+
 }
  
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
@@ -47,6 +53,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     hint,
 
     revealable = false,
+    etiquetaOculta = false,
+    compacto = false,
 
     required,
 
@@ -75,6 +83,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const inputClases = [
 
     INPUT_BASE,
+    compacto ? "lg:min-h-9 lg:px-3" : "lg:min-h-10",
 
     error ? INPUT_ERROR : INPUT_NORMAL,
 
@@ -92,7 +101,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 <div className="flex flex-col gap-2">
 
       {label && (
-<label className="text-sm font-medium text-slate-900" htmlFor={id}>
+<label className={etiquetaOculta ? "sr-only" : "text-sm font-medium text-slate-700"} htmlFor={id}>
 
           {label}
 

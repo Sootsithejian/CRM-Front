@@ -20,3 +20,11 @@ export const OPCIONES_SECTOR = Array.from({ length: 100 }, (_, i) => ({
   valor: String(i + 1),
   etiqueta: String(i + 1),
 }));
+/*  Para barras de filtros, donde la etiqueta va oculta: la opción
+    elegida tiene que decir sola qué es ("Zona B", no "B").  */
+export const OPCIONES_FILTRO_ZONA = LETRAS_ZONA.map((l) => ({ valor: l, etiqueta: `Zona ${l}` }));
+
+export const OPCIONES_FILTRO_SECTOR = OPCIONES_SECTOR.map((o) => ({
+  valor: o.valor,
+  etiqueta: `Sector ${o.valor}`,
+}));

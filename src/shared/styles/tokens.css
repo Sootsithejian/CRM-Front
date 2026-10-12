@@ -44,7 +44,9 @@
  
   /* ---------- Tipografía ---------- */
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+  /* InterVariable trae el eje de tamaño óptico: los títulos grandes
+     toman automáticamente el corte "Display", más cerrado. */
+  --font-sans: "InterVariable", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
 
     Roboto, sans-serif;
  

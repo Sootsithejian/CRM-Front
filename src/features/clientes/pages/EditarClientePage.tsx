@@ -187,7 +187,7 @@ export function EditarClientePage() {
 <Breadcrumb items={migas} />
  
       <header className="mb-6">
-<h1 className="text-2xl font-bold text-slate-900 lg:text-3xl">
+<h1 className="text-2xl font-semibold text-slate-900">
 
           Editar Cliente
 </h1>

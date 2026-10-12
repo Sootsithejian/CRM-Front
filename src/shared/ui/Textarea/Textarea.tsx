@@ -26,7 +26,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             <div className="flex flex-col gap-2">
 
                 {label && (
-                    <label className="text-sm font-medium text-slate-900" htmlFor={id}>
+                    <label className="text-sm font-medium text-slate-700" htmlFor={id}>
 
                         {label}
 
@@ -53,7 +53,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
                     aria-describedby={messageId}
 
-                    className={`w-full resize-y rounded-lg border bg-white px-4 py-3 text-base text-slate-900 transition duration-150 placeholder:text-slate-400 focus:outline-none focus:ring-3 disabled:cursor-not-allowed disabled:bg-slate-100 ${error
+                    className={`w-full resize-y rounded-lg border bg-white px-4 py-3 text-base text-slate-900 lg:py-2.5 lg:text-sm transition duration-150 placeholder:text-slate-400 focus:outline-none focus:ring-3 disabled:cursor-not-allowed disabled:bg-slate-100 ${error
 
                             ? "border-accent-500 focus:border-accent-500 focus:ring-accent-100"
 

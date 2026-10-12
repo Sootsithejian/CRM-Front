@@ -24,11 +24,18 @@ interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "id"
 
     placeholder?: string;
 
+    /** La etiqueta solo para lectores de pantalla: úsalo cuando el
+        placeholder y las opciones ya dicen qué es (barras de filtros). */
+    etiquetaOculta?: boolean;
+
+    /** 36px en escritorio en vez de 40px. Para barras de filtros. */
+    compacto?: boolean;
+
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select(
 
-    { label, error, opciones, placeholder, required, className, ...rest },
+    { label, error, opciones, placeholder, required, etiquetaOculta = false, compacto = false, className, ...rest },
 
     ref
 
@@ -40,7 +47,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
         <div className="flex flex-col gap-2">
 
             {label && (
-                <label className="text-sm font-medium text-slate-900" htmlFor={id}>
+                <label className={etiquetaOculta ? "sr-only" : "text-sm font-medium text-slate-700"} htmlFor={id}>
 
                     {label}
 
@@ -60,7 +67,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
 
                     aria-invalid={error ? true : undefined}
 
-                    className={`w-full min-h-11 appearance-none rounded-lg border bg-white py-0 pr-10 pl-4 text-base text-slate-900 transition duration-150 focus:outline-none focus:ring-3 disabled:cursor-not-allowed disabled:bg-slate-100 ${error
+                    className={`w-full min-h-11 appearance-none rounded-lg border bg-white py-0 pr-10 pl-4 text-base text-slate-900 lg:text-sm ${compacto ? "lg:min-h-9 lg:pl-3" : "lg:min-h-10"} transition duration-150 focus:outline-none focus:ring-3 disabled:cursor-not-allowed disabled:bg-slate-100 ${error
 
                             ? "border-accent-500 focus:border-accent-500 focus:ring-accent-100"
 

@@ -18,7 +18,7 @@ const VARIANTES: Record<Variant, string> = {
 
   primary:
 
-    "bg-primary-500 text-white hover:not-disabled:bg-primary-600 active:not-disabled:bg-primary-700",
+    "bg-navy-800 text-white hover:not-disabled:bg-navy-700 active:not-disabled:bg-navy-900",
 
   secondary:
 
@@ -36,11 +36,11 @@ const VARIANTES: Record<Variant, string> = {
  
 const TAMAÑOS: Record<Size, string> = {
 
-  sm: "min-h-9 px-4 text-xs",
+  sm: "min-h-9 px-4 text-xs lg:min-h-8 lg:px-3",
 
-  md: "min-h-11 px-5 text-sm",
+  md: "min-h-11 px-5 text-sm lg:min-h-10",
 
-  lg: "min-h-13 px-6 text-base",
+  lg: "min-h-13 px-6 text-base lg:min-h-11",
 
 };
  

@@ -1,65 +1,53 @@
-import { useNavigate, useParams, useLocation } from "react-router-dom";
-
-import { ChevronLeft } from "lucide-react";
-
-import { Alert, Breadcrumb, Button, Spinner } from "../../../shared/ui";
-
-import { useAuth } from "../../auth/hooks/useAuth";
-
-import { ROLES } from "../../../shared/constants/roles";
-
-import { useClienteDetalle } from "../hooks/useClienteDetalle";
-
 import { useState } from "react";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Pencil, Plus } from "lucide-react";
 
+import {
+    Alert,
+    Badge,
+    Breadcrumb,
+    Button,
+    CabeceraDetalle,
+    DataItem,
+    DataList,
+    DatoContexto,
+    Spinner,
+} from "../../../shared/ui";
+import { useAuth } from "../../auth/hooks/useAuth";
+import { ROLES } from "../../../shared/constants/roles";
+import { formatearFechaHora, formatearFechaSolo } from "../../../shared/lib/formato";
+import { useClienteDetalle } from "../hooks/useClienteDetalle";
 import { ModalVetar } from "../../lista-negra/components/ModalVetar";
-
 import { HistorialZona } from "../components/HistorialZona";
+import type { Domicilio } from "../types";
 
 export function DetalleClientePage() {
-
     const { id } = useParams<{ id: string }>();
-
     const navigate = useNavigate();
-
     const location = useLocation();
-    
     const [vetando, setVetando] = useState(false);
     const [vetado, setVetado] = useState(false);
 
-    const mensajeExito = 
-    (vetado && "La persona fue agregada a la lista negra.") ||
-    (location.state as { mensaje?: string } | null)?.mensaje;
+    const mensajeExito =
+        (vetado && "La persona fue agregada a la lista negra.") ||
+        (location.state as { mensaje?: string } | null)?.mensaje;
 
     const { sesion } = useAuth();
-
-
-
     const { detalle, cargando, error, recargar } = useClienteDetalle(Number(id));
 
-    const puedeVetar =
-        sesion?.rol === ROLES.ADMINISTRADOR;
-
+    const puedeVetar = sesion?.rol === ROLES.ADMINISTRADOR;
     const puedeEditar =
-
         sesion?.rol === ROLES.ADMINISTRADOR ||
-
         sesion?.rol === ROLES.GERENTE_ZONA ||
-
         sesion?.rol === ROLES.PROMOTOR;
 
     const migas = [
-
         { label: "Inicio", ruta: "/inicio" },
-
-        { label: "Consulta de Clientes", ruta: "/clientes" },
-
-        { label: "Detalle del Cliente" },
-
+        { label: "Clientes", ruta: "/clientes" },
+        { label: detalle ? detalle.persona.nombre : "Detalle del cliente" },
     ];
 
     if (cargando) {
-
         return (
             <>
                 <Breadcrumb items={migas} />
@@ -67,142 +55,205 @@ export function DetalleClientePage() {
                     <Spinner centered size="lg" />
                 </div>
             </>
-
         );
-
     }
 
     if (error || !detalle) {
-
         return (
             <>
                 <Breadcrumb items={migas} />
                 <Alert variant="error" title="No se pudo abrir el cliente">
-
                     {error ?? "Error desconocido."}
                 </Alert>
                 <div className="mt-4">
                     <Button variant="secondary" onClick={() => navigate("/clientes")}>
-
                         Volver a la consulta
                     </Button>
                 </div>
             </>
-
         );
-
     }
 
-    const { cliente, persona, domicilios } = detalle;
-
+    const { cliente, persona, domicilios, avala_a } = detalle;
     const dom = domicilios[0] ?? null;
+    const zonaSector = `${cliente.zona ?? "—"}-${cliente.sector ?? "—"}`;
 
     return (
         <>
             <Breadcrumb items={migas} />
 
-            <header className="mb-6 flex flex-wrap items-start justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-slate-900 lg:text-3xl">
+            <CabeceraDetalle
+                titulo={persona.nombre}
+                insignias={persona.en_lista_negra && <Badge variant="danger">Lista negra</Badge>}
+                contexto={[
+                    <>
+                        Cliente <DatoContexto>{cliente.numero_cliente}</DatoContexto>
+                    </>,
+                    <>
+                        Zona <DatoContexto>{zonaSector}</DatoContexto>
+                    </>,
+                    persona.tel_principal && (
+                        <>
+                            Tel. <DatoContexto>{persona.tel_principal}</DatoContexto>
+                        </>
+                    ),
+                ]}
+                acciones={
+                    <>
+                        <Button
+                            variant="secondary"
+                            disabled={!puedeEditar}
+                            onClick={() => navigate(`/clientes/${cliente.id}/editar`)}
+                        >
+                            <Pencil size={15} aria-hidden="true" />
+                            Editar
+                        </Button>
+                        {!persona.en_lista_negra && (
+                            <Button
+                                disabled={!puedeEditar}
+                                onClick={() =>
+                                    navigate(`/creditos/solicitudes/nueva?cliente=${cliente.id}`)
+                                }
+                            >
+                                <Plus size={16} aria-hidden="true" />
+                                Nuevo crédito
+                            </Button>
+                        )}
+                    </>
+                }
+            />
 
-                        Detalle del Cliente
-                    </h1>
-                    <p className="mt-1 text-slate-500">
-
-                        Información completa del cliente seleccionado
-                    </p>
-                </div>
-
-                <Button variant="secondary" onClick={() => navigate("/clientes")}>
-                    <ChevronLeft size={16} aria-hidden="true" />
-
-                    Regresar
-                </Button>
-            </header>
             {mensajeExito && (
                 <div className="mb-6">
                     <Alert variant="success">{mensajeExito}</Alert>
                 </div>
             )}
-            <section className="rounded-xl border border-slate-200 bg-white p-6 lg:p-8">
-                <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
-                    <Campo label="En lista negra">
-                        <span className="flex items-center gap-2">
-                            <span
 
-                                className={`size-2 rounded-full ${persona.en_lista_negra ? "bg-accent-500" : "bg-green-500"
-
-                                    }`}
-
-                                aria-hidden="true"
-
-                            />
-
-                            {persona.en_lista_negra ? "SÍ" : "NO"}
-                        </span>
-                    </Campo>
-
-                    <Campo label="Número de cliente">{cliente.numero_cliente}</Campo>
-                    <Campo label="Nombre del cliente">{persona.nombre}</Campo>
-
-                    <Campo label="Zona">{cliente.zona}</Campo>
-                    <Campo label="Sector">{cliente.sector}</Campo>
-                    <Campo label="Teléfono">{persona.tel_principal}</Campo>
-
-                    <Campo label="Calle">{dom?.calle}</Campo>
-                    <Campo label="# Exterior">{dom?.numero_ext}</Campo>
-                    <Campo label="Interior">{dom?.numero_int}</Campo>
-
-                    <Campo label="Colonia">{dom?.colonia}</Campo>
-                    <Campo label="CURP">{persona.curp}</Campo>
-                    <Campo label="Alta">{cliente.usuario_alta}</Campo>
+            {/* Lista negra: solo se dice cuando aplica, y con lo que hay que hacer. */}
+            {persona.en_lista_negra && (
+                <div className="mb-6">
+                    <Alert variant="error" title="Persona en lista negra">
+                        No puede recibir créditos ni ser aval.{" "}
+                        <Link
+                            to="/clientes/lista-negra"
+                            className="font-medium text-red-800 underline"
+                        >
+                            Ver en lista negra
+                        </Link>
+                    </Alert>
                 </div>
+            )}
 
-                <div className="mt-2 border-t border-slate-100 pt-6">
-                    <p className="mb-2 text-xs tracking-wide text-slate-400 uppercase">
+            <div className="grid gap-6 lg:grid-cols-3 lg:items-start">
+                <section
+                    aria-label="Datos del cliente"
+                    className="rounded-xl border border-slate-200 bg-white p-4 lg:col-span-2 lg:p-5"
+                >
+                    <div className="grid gap-x-10 gap-y-6 md:grid-cols-2">
+                        <DataList titulo="Identidad" compacta>
+                            <DataItem label="Nombre">{persona.nombre}</DataItem>
+                            <DataItem label="CURP" mono>
+                                {persona.curp}
+                            </DataItem>
+                            {persona.rfc && (
+                                <DataItem label="RFC" mono>
+                                    {persona.rfc}
+                                </DataItem>
+                            )}
+                            <DataItem label="Nacimiento">
+                                {formatearFechaSolo(persona.fecha_nac)}
+                            </DataItem>
+                            {persona.estado_civil && (
+                                <DataItem label="Estado civil">{persona.estado_civil}</DataItem>
+                            )}
+                            {persona.ocupacion && (
+                                <DataItem label="Ocupación">{persona.ocupacion}</DataItem>
+                            )}
+                        </DataList>
 
-                        Observaciones
-                    </p>
-                    <div className="min-h-12 rounded-lg bg-slate-50 px-4 py-3 text-slate-900">
+                        <DataList titulo="Domicilio" compacta>
+                            <DataItem label="Calle">{calleCompleta(dom)}</DataItem>
+                            <DataItem label="Colonia">{dom?.colonia}</DataItem>
+                            {dom?.cp && <DataItem label="C.P.">{dom.cp}</DataItem>}
+                            {dom?.municipio && (
+                                <DataItem label="Municipio">{dom.municipio}</DataItem>
+                            )}
+                            {dom?.entre_calles && (
+                                <DataItem label="Entre calles">{dom.entre_calles}</DataItem>
+                            )}
+                        </DataList>
 
-                        {cliente.observaciones?.trim() || (
-                            <span className="text-slate-400">Sin observaciones</span>
+                        <DataList titulo="Contacto" compacta>
+                            <DataItem label="Teléfono">{persona.tel_principal}</DataItem>
+                            {persona.tel_2 && <DataItem label="Teléfono 2">{persona.tel_2}</DataItem>}
+                            {persona.tel_3 && <DataItem label="Teléfono 3">{persona.tel_3}</DataItem>}
+                            {persona.email && <DataItem label="Correo">{persona.email}</DataItem>}
+                        </DataList>
 
+                        <DataList titulo="Operación" compacta>
+                            <DataItem label="Nº de cliente">{cliente.numero_cliente}</DataItem>
+                            <DataItem label="Zona y sector">{zonaSector}</DataItem>
+                            <DataItem label="Alta">{formatearFechaHora(cliente.fecha_alta)}</DataItem>
+                            <DataItem label="Dio de alta">{cliente.usuario_alta}</DataItem>
+                        </DataList>
+                    </div>
+
+                    <div className="mt-6">
+                        <h3 className="mb-1 text-xs font-semibold tracking-wide text-slate-500 uppercase">
+                            Observaciones
+                        </h3>
+                        {cliente.observaciones?.trim() ? (
+                            <p className="text-sm whitespace-pre-line text-slate-900">
+                                {cliente.observaciones.trim()}
+                            </p>
+                        ) : (
+                            <p className="text-sm text-slate-500">Sin observaciones.</p>
                         )}
                     </div>
+                </section>
+
+                <div className="flex min-w-0 flex-col gap-6">
+                    {avala_a.length > 0 && (
+                        <section className="rounded-xl border border-slate-200 bg-white p-4">
+                            <h2 className="mb-2 text-sm font-semibold text-slate-900">Es aval de</h2>
+                            <ul className="divide-y divide-slate-100 text-sm">
+                                {avala_a.map((a) => (
+                                    <li
+                                        key={a.id_relacion}
+                                        className="flex items-baseline justify-between gap-3 py-1.5"
+                                    >
+                                        <Link
+                                            to={`/clientes/${a.id_cliente}`}
+                                            className="min-w-0 font-medium text-slate-900 hover:text-primary-700"
+                                        >
+                                            {a.nombre}
+                                        </Link>
+                                        <span className="shrink-0 text-xs text-slate-500">
+                                            {a.parentesco ?? `Cliente ${a.numero_cliente}`}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </section>
+                    )}
+
+                    <HistorialZona idCliente={cliente.id} />
+
+                    {puedeVetar && !persona.en_lista_negra && (
+                        <div className="rounded-xl border border-red-200 p-4">
+                            <h2 className="text-sm font-semibold text-slate-900">Lista negra</h2>
+                            <p className="mt-1 mb-3 text-sm text-slate-600">
+                                Veta a la persona como cliente y como aval. Solo un administrador
+                                puede retirarla después.
+                            </p>
+                            <Button variant="danger" size="sm" onClick={() => setVetando(true)}>
+                                Agregar a lista negra
+                            </Button>
+                        </div>
+                    )}
                 </div>
-            </section>
-
-            <HistorialZona idCliente={cliente.id}/>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-                {!persona.en_lista_negra && (
-                  <Button
-                    onClick={() => navigate(`/creditos/solicitudes/nueva?cliente=${cliente.id}`)}>    
-                      Nuevo Crédito
-                </Button>
-                )}
-                <Button
-                    variant="secondary"
-                    disabled={!puedeEditar}
-                    onClick={() => navigate(`/clientes/${cliente.id}/editar`)}
-                >
-                    Editar Datos
-                </Button>
-                {puedeVetar && !persona.en_lista_negra && (
-                    <Button variant="danger" onClick={() => setVetando(true)}>
-                        Agregar a lista negra
-                    </Button>
-                )}
-                {persona.en_lista_negra && (
-                    <Button
-                    variant="secondary"
-                    onClick={() => navigate("/clientes/lista-negra")}
-                    >
-                        Ver en lista negra
-                    </Button>
-                )}
             </div>
+
             <ModalVetar
                 abierto={vetando}
                 idPersona={persona.id}
@@ -211,45 +262,17 @@ export function DetalleClientePage() {
                 onExito={() => {
                     setVetando(false);
                     setVetado(true);
-                    recargar()
+                    recargar();
                 }}
-                />
+            />
         </>
-
     );
-
 }
 
-function Campo({
-
-    label,
-
-    children,
-
-}: {
-
-    label: string;
-
-    children: React.ReactNode;
-
-}) {
-
-    const vacio =
-
-        children === null || children === undefined || children === "";
-
-    return (
-        <div className="border-b border-slate-100 py-5">
-            <p className="mb-1 text-xs tracking-wide text-slate-400 uppercase">
-
-                {label}
-            </p>
-            <p className={vacio ? "text-slate-400" : "font-medium text-slate-900"}>
-
-                {vacio ? "—" : children}
-            </p>
-        </div>
-
-    );
-
+/** "Hidalgo 123 int. 4": la calle con sus números, en una sola línea. */
+function calleCompleta(dom: Domicilio | null): string | null {
+    if (!dom) return null;
+    return [dom.calle, dom.numero_ext, dom.numero_int && `int. ${dom.numero_int}`]
+        .filter(Boolean)
+        .join(" ");
 }

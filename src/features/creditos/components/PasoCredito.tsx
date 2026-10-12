@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Alert, Button, Input, Select, Spinner, FileInput} from "../../../shared/ui";
+import { Alert, Button, Input, Select, FileInput} from "../../../shared/ui";
 
 import { cotizar, listarPlazos, listarProductos } from "../api/creditos.api";
 

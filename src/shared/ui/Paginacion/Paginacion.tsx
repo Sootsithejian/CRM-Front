@@ -40,7 +40,7 @@ export function Paginacion({ pagina, paginas, onCambiar }: PaginacionProps) {
 
     const claseBoton =
 
-        "flex size-9 items-center justify-center rounded-lg border text-sm font-medium transition duration-150 disabled:cursor-not-allowed disabled:opacity-40";
+        "flex size-9 items-center justify-center rounded-lg border text-sm font-medium tabular-nums transition duration-150 disabled:cursor-not-allowed disabled:opacity-40 lg:size-8";
 
     return (
         <nav className="flex items-center gap-1" aria-label="Paginación">
@@ -62,7 +62,7 @@ export function Paginacion({ pagina, paginas, onCambiar }: PaginacionProps) {
             {rango.map((p, i) =>
 
                 p === "..." ? (
-                    <span key={`gap-${i}`} className="px-1 text-sm text-slate-400">
+                    <span key={`gap-${i}`} className="px-1 text-sm text-slate-500">
 
                         …
                     </span>
@@ -82,7 +82,7 @@ export function Paginacion({ pagina, paginas, onCambiar }: PaginacionProps) {
 
                             p === pagina
 
-                                ? `${claseBoton} border-primary-500 bg-primary-500 text-white`
+                                ? `${claseBoton} border-navy-800 bg-navy-800 text-white`
 
                                 : `${claseBoton} border-slate-200 bg-white text-slate-600 hover:bg-slate-50`
 

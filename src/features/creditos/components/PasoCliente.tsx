@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import { Search } from "lucide-react";
 
-import { Alert, Button, Input, Spinner } from "../../../shared/ui";
+import { Alert, Button, Input } from "../../../shared/ui";
 
 import { listarClientes, obtenerCliente } from "../../clientes/api/clientes.api";
 
@@ -328,8 +328,8 @@ function Campo({ label, children }: { label: string; children: React.ReactNode }
 
   return (
 <div className="border-b border-slate-100 py-5">
-<p className="mb-1 text-xs tracking-wide text-slate-400 uppercase">{label}</p>
-<p className={vacio ? "text-slate-400" : "font-medium text-slate-900"}>
+<p className="mb-1 text-xs tracking-wide text-slate-500 uppercase">{label}</p>
+<p className={vacio ? "text-slate-500" : "font-medium text-slate-900"}>
 
         {vacio ? "—" : children}
 </p>

@@ -30,6 +30,9 @@ import { NuevaSolicitudPage } from "../../features/creditos/pages/NuevaSolicitud
 import { SolicitudesPage } from "../../features/creditos/pages/SolicitudesPage";
 import { ConsultaCreditosPage } from "../../features/creditos/pages/ConsultaCreditosPage";
 import { DetalleCreditoPage } from "../../features/creditos/pages/DetalleCreditoPage";
+import { ConsultaPagosPage } from "../../features/pagos/pages/ConsultaPagosPage";
+import { RegistrarPagoPage } from "../../features/pagos/pages/RegistrarPagoPage";
+import { DetallePagoPage } from "../../features/pagos/pages/DetallePagoPage";
  
 /* Espejo de los permisos del backend. Si cambian allá, cambian aquí. */
 
@@ -101,6 +104,15 @@ export function AppRoutes() {
 <Route path="/clientes/alta" element={<AltaClientePage/>}/>
 <Route path="/clientes/:id/editar" element={<EditarClientePage />} />
 <Route path="/creditos/solicitudes/nueva" element={<NuevaSolicitudPage/>}/>
+</Route>
+ 
+          {/* ---- Pagos: mismos roles que clientes en el backend ---- */}
+<Route element={<ProtectedRoute roles={ROLES_CAPTURA_CLIENTES} />}>
+<Route path="/pagos/registrar" element={<RegistrarPagoPage />} />
+</Route>
+<Route element={<ProtectedRoute roles={ROLES_LECTURA_CLIENTES} />}>
+<Route path="/pagos" element={<ConsultaPagosPage />} />
+<Route path="/pagos/:id" element={<DetallePagoPage />} />
 </Route>
  
           {/* ---- Usuarios ---- */}

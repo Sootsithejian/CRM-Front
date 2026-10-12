@@ -141,7 +141,7 @@ export function AltaClientePage() {
       />
  
       <header className="mb-6">
-<h1 className="text-2xl font-bold text-slate-900 lg:text-3xl">
+<h1 className="text-2xl font-semibold text-slate-900">
 
           Alta de Cliente
 </h1>

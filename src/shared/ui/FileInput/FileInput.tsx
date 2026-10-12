@@ -125,7 +125,7 @@ export function FileInput({
 >
 <UploadCloud size={24} className="text-slate-500" aria-hidden="true" />
 <span className="text-sm font-medium text-slate-700">Subir archivo</span>
-<span className="text-xs text-slate-400">
+<span className="text-xs text-slate-500">
 
             Formatos admitidos: PDF, JPG, PNG
 </span>

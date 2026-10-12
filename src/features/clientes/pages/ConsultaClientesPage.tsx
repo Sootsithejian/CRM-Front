@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-import { Alert, Breadcrumb, Paginacion } from "../../../shared/ui";
+import { Alert, Breadcrumb, EncabezadoListado, PanelTabla, PieTabla } from "../../../shared/ui";
 
 import { useDebounce } from "../../../shared/hooks/useDebounce";
 
@@ -84,10 +84,6 @@ export function ConsultaClientesPage() {
 
         sesion?.rol === ROLES.PROMOTOR;
 
-    const desde = total === 0 ? 0 : (pagina - 1) * LIMITE + 1;
-
-    const hasta = Math.min(pagina * LIMITE, total);
-
     return (
         <>
             <Breadcrumb
@@ -96,71 +92,47 @@ export function ConsultaClientesPage() {
 
             />
 
-            <header className="mb-6">
-                <h1 className="text-2xl font-bold text-slate-900 lg:text-3xl">
-
-                    Consulta de Clientes
-                </h1>
-                <p className="mt-1 text-slate-500">
-
-                    Busca, analiza y gestiona los expedientes y solicitudes de la cartera de
-
-                    clientes.
-                </p>
-            </header>
-
-            <FiltrosClientes
-
-                search={search}
-
-                zona={zona}
-
-                sector={sector}
-
-                onSearch={cambiarFiltro(setSearch)}
-
-                onZona={cambiarFiltro(setZona)}
-
-                onSector={cambiarFiltro(setSector)}
-
-                onLimpiar={limpiar}
-
-            />
+            <EncabezadoListado titulo="Clientes" total={cargando ? null : total} />
 
             {error && (
                 <div className="mb-6">
                     <Alert variant="error" title="Error al cargar">
-
                         {error}
                     </Alert>
                 </div>
-
             )}
 
-            <TablaClientes
-
-                clientes={clientes}
-
-                cargando={cargando}
-
-                puedeEditar={puedeEditar}
-
-            />
-
-            {!cargando && total > 0 && (
-                <div className="mt-4 flex flex-col items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white px-5 py-4 sm:flex-row">
-                    <p className="text-sm text-slate-500">
-
-                        Mostrando <span className="font-semibold text-slate-900">{desde} - {hasta}</span>{" "}
-
-                        de <span className="font-semibold text-slate-900">{total}</span> clientes
-
-                        registrados
-                    </p>
-                    <Paginacion pagina={pagina} paginas={paginas} onCambiar={setPagina} />
-                </div>
-
-            )}
+            <PanelTabla
+                filtros={
+                    <FiltrosClientes
+                        search={search}
+                        zona={zona}
+                        sector={sector}
+                        onSearch={cambiarFiltro(setSearch)}
+                        onZona={cambiarFiltro(setZona)}
+                        onSector={cambiarFiltro(setSector)}
+                        onLimpiar={limpiar}
+                    />
+                }
+                pie={
+                    !cargando && (
+                        <PieTabla
+                            pagina={pagina}
+                            paginas={paginas}
+                            total={total}
+                            limite={LIMITE}
+                            sustantivo="clientes"
+                            onCambiar={setPagina}
+                        />
+                    )
+                }
+            >
+                <TablaClientes
+                    clientes={clientes}
+                    cargando={cargando}
+                    puedeEditar={puedeEditar}
+                />
+            </PanelTabla>
         </>
 
     );

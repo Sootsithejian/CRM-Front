@@ -1,4 +1,4 @@
-import { act, useState } from "react";
+import { useState } from "react";
 
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -192,7 +192,7 @@ export function NuevaSolicitudPage() {
         {hayCliente && (        
             <>          
               <header className="mb-6">            
-                <h1 className="text-2xl font-bold text-slate-900 lg:text-3xl">
+                <h1 className="text-2xl font-semibold text-slate-900">
                    Nueva Solicitud de Crédito            
                 </h1>            
                 <p className="mt-1 text-slate-500">

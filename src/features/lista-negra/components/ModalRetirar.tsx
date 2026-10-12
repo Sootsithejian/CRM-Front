@@ -103,7 +103,7 @@ export function ModalRetirar({ registro, onCerrar, onExito }: ModalRetirarProps)
                     <div className="mb-5 rounded-lg bg-slate-50 px-4 py-3 text-sm">
                         <p className="text-slate-500">Motivo del veto original</p>
                         <p className="mt-1 text-slate-900">{registro.motivo}</p>
-                        <p className="mt-2 text-xs text-slate-400">
+                        <p className="mt-2 text-xs text-slate-500">
 
                             Registrado por {registro.usuario_alta} el{" "}
 

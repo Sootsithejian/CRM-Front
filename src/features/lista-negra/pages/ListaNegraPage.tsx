@@ -2,25 +2,24 @@ import { useMemo, useState } from "react";
 
 import { Link } from "react-router-dom";
 
-import { Search } from "lucide-react";
 
 import {
-
     Alert,
-
+    EncabezadoListado,
+    CampoBusqueda,
     Badge,
-
     Breadcrumb,
-
     Button,
-
-    Paginacion,
-
+    Fila,
+    PanelTabla,
+    PieTabla,
     Select,
-
-    Spinner,
-
+    Tabla,
+    TablaCargando,
+    TablaVacia,
+    Td,
 } from "../../../shared/ui";
+import type { ColumnaTabla } from "../../../shared/ui";
 
 import { useDebounce } from "../../../shared/hooks/useDebounce";
 
@@ -35,6 +34,17 @@ import { ModalRetirar } from "../components/ModalRetirar";
 import type { RegistroListaNegra } from "../types";
 
 const LIMITE = 25;
+
+const COLUMNAS: ColumnaTabla[] = [
+    { titulo: "Persona" },
+    { titulo: "CURP" },
+    { titulo: "Nº cliente", alinear: "der" },
+    { titulo: "Motivo" },
+    { titulo: "Registró" },
+    { titulo: "Fecha" },
+    { titulo: "Estado" },
+    { titulo: "Acciones", alinear: "der", oculto: true },
+];
 
 export function ListaNegraPage() {
 
@@ -78,10 +88,6 @@ export function ListaNegraPage() {
 
     const puedeRetirar = sesion?.rol === ROLES.ADMINISTRADOR;
 
-    const desde = total === 0 ? 0 : (pagina - 1) * LIMITE + 1;
-
-    const hasta = Math.min(pagina * LIMITE, total);
-
     const alRetirar = () => {
 
         setARetirar(null);
@@ -108,16 +114,7 @@ export function ListaNegraPage() {
 
             />
 
-            <header className="mb-6">
-                <h1 className="text-2xl font-bold text-slate-900 lg:text-3xl">
-
-                    Lista negra
-                </h1>
-                <p className="mt-1 text-slate-500">
-
-                    Personas vetadas para registrarse como cliente o como aval.
-                </p>
-            </header>
+            <EncabezadoListado titulo="Lista negra" total={cargando ? null : total} />
 
             {exito && (
                 <div className="mb-6">
@@ -129,218 +126,111 @@ export function ListaNegraPage() {
 
             )}
 
-            <section className="mb-6 rounded-xl border border-slate-200 bg-white p-5">
-                <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_220px]">
-                    <div className="flex flex-col gap-2">
-                        <label className="text-sm font-medium text-slate-900" htmlFor="buscar-ln">
-
-                            Búsqueda rápida
-                        </label>
-                        <div className="relative flex items-center">
-                            <Search
-
-                                size={18}
-
-                                className="pointer-events-none absolute left-4 text-slate-400"
-
-                                aria-hidden="true"
-
-                            />
-                            <input
-
-                                id="buscar-ln"
-
-                                type="search"
-
-                                value={search}
-
-                                onChange={(e) => {
-
-                                    setSearch(e.target.value);
-
-                                    setPagina(1);
-
-                                }}
-
-                                placeholder="Buscar por nombre, CURP, número de cliente o teléfono…"
-
-                                className="min-h-11 w-full rounded-lg border border-slate-300 bg-white pr-4 pl-11 text-base text-slate-900 transition duration-150 placeholder:text-slate-400 hover:border-slate-400 focus:border-primary-500 focus:ring-3 focus:ring-primary-500/35 focus:outline-none"
-
-                            />
-                        </div>
-                    </div>
-
-                    <Select
-
-                        label="Estado"
-
-                        value={activa}
-
-                        onChange={(e) => {
-
-                            setActiva(e.target.value as "true" | "false");
-
-                            setPagina(1);
-
-                        }}
-
-                        opciones={[
-
-                            { valor: "true", etiqueta: "Vetos activos" },
-
-                            { valor: "false", etiqueta: "Incluir histórico" },
-
-                        ]}
-
-                    />
-                </div>
-            </section>
-
             {error && (
                 <div className="mb-6">
                     <Alert variant="error" title="Error al cargar">
-
                         {error}
                     </Alert>
                 </div>
-
             )}
 
-            {cargando ? (
-                <div className="rounded-xl border border-slate-200 bg-white py-16">
-                    <Spinner centered size="lg" />
-                </div>
-
-            ) : registros.length === 0 ? (
-                <div className="rounded-xl border border-slate-200 bg-white py-16 text-center">
-                    <p className="font-medium text-slate-900">Sin registros</p>
-                    <p className="mt-1 text-sm text-slate-500">
-
+            <PanelTabla
+                filtros={
+                    <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_200px]">
+                        <CampoBusqueda
+                            etiqueta="Buscar en lista negra"
+                            valor={search}
+                            onCambiar={(v) => {
+                                setSearch(v);
+                                setPagina(1);
+                            }}
+                            placeholder="Nombre, CURP, número de cliente o teléfono…"
+                        />
+                        <Select
+                            label="Estado"
+                            etiquetaOculta
+                            compacto
+                            value={activa}
+                            onChange={(e) => {
+                                setActiva(e.target.value as "true" | "false");
+                                setPagina(1);
+                            }}
+                            opciones={[
+                                { valor: "true", etiqueta: "Vetos activos" },
+                                { valor: "false", etiqueta: "Incluir histórico" },
+                            ]}
+                        />
+                    </div>
+                }
+                pie={
+                    !cargando && (
+                        <PieTabla
+                            pagina={pagina}
+                            paginas={paginas}
+                            total={total}
+                            limite={LIMITE}
+                            sustantivo="registros"
+                            onCambiar={setPagina}
+                        />
+                    )
+                }
+            >
+                {cargando ? (
+                    <TablaCargando />
+                ) : registros.length === 0 ? (
+                    <TablaVacia titulo="Sin registros">
                         {search
-
                             ? "Ninguna persona coincide con la búsqueda."
-
                             : "No hay personas en lista negra."}
-                    </p>
-                </div>
-
-            ) : (
-                <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
-                    <table className="w-full min-w-[860px] border-collapse text-sm">
-                        <thead>
-                            <tr className="border-b border-slate-200">
-
-                                {["Persona", "Nº Cliente", "Motivo", "Registró", "Estado", ""].map(
-
-                                    (h, i) => (
-                                        <th
-
-                                            key={h || i}
-
-                                            className={`px-5 py-3.5 text-xs font-semibold tracking-wide text-slate-500 uppercase ${i === 5 ? "text-right" : "text-left"
-
-                                                }`}
+                    </TablaVacia>
+                ) : (
+                    <Tabla columnas={COLUMNAS} anchoMinimo="min-w-[960px]">
+                        {registros.map((r) => (
+                            <Fila key={r.id}>
+                                <Td className="font-medium text-slate-900">{r.nombre}</Td>
+                                <Td className="font-mono text-[13px] whitespace-nowrap text-slate-600">
+                                    {r.curp ?? <span className="font-sans text-slate-500">—</span>}
+                                </Td>
+                                <Td numerico>
+                                    {r.id_cliente ? (
+                                        <Link
+                                            to={`/clientes/${r.id_cliente}`}
+                                            className="font-medium text-primary-700 hover:underline"
                                         >
-
-                                            {h}
-                                        </th>
-
-                                    )
-
-                                )}
-                            </tr>
-                        </thead>
-
-                        <tbody className="divide-y divide-slate-100">
-
-                            {registros.map((r) => (
-                                <tr key={r.id} className="transition duration-150 hover:bg-slate-50">
-                                    <td className="px-5 py-4">
-                                        <p className="font-semibold text-slate-900">{r.nombre}</p>
-                                        <p className="mt-0.5 text-xs text-slate-500">
-
-                                            {r.curp ?? "Sin CURP"}
-                                        </p>
-                                    </td>
-
-                                    <td className="px-5 py-4 whitespace-nowrap">
-
-                                        {r.id_cliente ? (
-                                            <Link
-
-                                                to={`/clientes/${r.id_cliente}`}
-
-                                                className="font-medium text-primary-600 hover:underline"
-                                            >
-
-                                                {r.numero_cliente}
-                                            </Link>
-
-                                        ) : (
-                                            <span className="text-slate-400" title="Solo figura como aval">
-
-                                                No es cliente
-                                            </span>
-
-                                        )}
-                                    </td>
-
-                                    <td className="max-w-xs px-5 py-4 text-slate-700">{r.motivo}</td>
-
-                                    <td className="px-5 py-4 whitespace-nowrap text-slate-500">
-                                        <p>{r.usuario_alta}</p>
-                                        <p className="text-xs text-slate-400">
-
-                                            {new Date(r.fecha_alta).toLocaleDateString("es-MX", {
-
-                                                dateStyle: "medium",
-
-                                            })}
-                                        </p>
-                                    </td>
-
-                                    <td className="px-5 py-4">
-
-                                        {r.activa ? (
-                                            <Badge variant="danger">Activo</Badge>
-
-                                        ) : (
-                                            <Badge variant="neutral">Retirado</Badge>
-
-                                        )}
-                                    </td>
-
-                                    <td className="px-5 py-4 text-right">
-
-                                        {r.activa && puedeRetirar && (
-                                            <Button size="sm" variant="secondary" onClick={() => setARetirar(r)}>
-
-                                                Retirar
-                                            </Button>
-
-                                        )}
-                                    </td>
-                                </tr>
-
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-
-            )}
-
-            {!cargando && total > 0 && (
-                <div className="mt-4 flex flex-col items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white px-5 py-4 sm:flex-row">
-                    <p className="text-sm text-slate-500">
-
-                        Mostrando{" "}
-                        <span className="font-semibold text-slate-900">{desde} - {hasta}</span> de{" "}
-                        <span className="font-semibold text-slate-900">{total}</span> registros
-                    </p>
-                    <Paginacion pagina={pagina} paginas={paginas} onCambiar={setPagina} />
-                </div>
-
-            )}
+                                            {r.numero_cliente}
+                                        </Link>
+                                    ) : (
+                                        <span className="text-slate-500" title="Solo figura como aval">
+                                            No es cliente
+                                        </span>
+                                    )}
+                                </Td>
+                                <Td className="max-w-xs text-slate-700">{r.motivo}</Td>
+                                <Td className="whitespace-nowrap text-slate-600">{r.usuario_alta}</Td>
+                                <Td className="whitespace-nowrap text-slate-600 tabular-nums">
+                                    {new Date(r.fecha_alta).toLocaleDateString("es-MX", {
+                                        dateStyle: "medium",
+                                    })}
+                                </Td>
+                                <Td>
+                                    {r.activa ? (
+                                        <Badge variant="danger">Activo</Badge>
+                                    ) : (
+                                        <Badge variant="neutral">Retirado</Badge>
+                                    )}
+                                </Td>
+                                <Td alinear="der">
+                                    {r.activa && puedeRetirar && (
+                                        <Button size="sm" variant="secondary" onClick={() => setARetirar(r)}>
+                                            Retirar
+                                        </Button>
+                                    )}
+                                </Td>
+                            </Fila>
+                        ))}
+                    </Tabla>
+                )}
+            </PanelTabla>
 
             <ModalRetirar
 
